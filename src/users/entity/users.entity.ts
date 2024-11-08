@@ -1,11 +1,17 @@
-import { Injectable } from '@nestjs/common';
 import { BaseModel } from 'src/common/entity/base.entity';
-import { Column, Entity, Unique } from 'typeorm';
-
-export enum Role {
-  ADMIN = '관리자',
-  USER = '사용자',
-}
+import { Role } from 'src/common/enum/role.enum';
+import { QuizzesModel } from 'src/quizzes/entity/quizzes.entity';
+import { SolvedQuizzesModel } from 'src/solved-quizzes/entity/solved-quizzes.entity';
+import { UserMajorsModel } from 'src/user-majors/entity/user-majors.entity';
+import { UserSkillsModel } from 'src/user-skills/entity/user-skills.entity';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+  Unique,
+} from 'typeorm';
 
 @Entity()
 export class UsersModel extends BaseModel {
@@ -40,4 +46,13 @@ export class UsersModel extends BaseModel {
 
   @Column()
   totalScore: number;
+
+  @OneToMany(() => UserMajorsModel, (major) => major.user)
+  majors: UserMajorsModel[];
+
+  @OneToMany(() => UserSkillsModel, (skill) => skill.user)
+  skills: UserSkillsModel[];
+
+  @OneToMany(() => SolvedQuizzesModel, (solvedQuiz) => solvedQuiz.user)
+  solvedQuizzes: SolvedQuizzesModel[];
 }
